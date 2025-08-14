@@ -94,7 +94,49 @@ function handleActiveCheck(evt) {
         }
     }
     // Hint: Removing a non-existent class from an element does not cause an error!
+
+// Hint: Caching the "link" object will come in handy for passing its subLinks array later.    
+    let linkObject;
+
+    for(let link of menuLinks){
+        if(link.text == evt.target.textContent){
+            linkObject = link;
+            break;
+        }
+    }
+    console.log(linkObject)
+// Within the same event listener, we want to toggle the submenu between active and non-active states. 
+    if (evt.target.classList.contains('active')){
+// If the clicked <a> element's "link" object within menuLinks has a subLinks property (all do, except for the "link" object for ABOUT) 
+        if (linkObject.subLinks) {
+            // set the CSS top property of subMenuEl to 100%.
+            subMenuEl.style.top = '100%';
+
+            buildSubmenu(linkObject.subLinks);
+        } else {
+            // Otherwise, set the CSS top property of subMenuEl to 0.
+            subMenuEl.style.top = '0'
+        }
+    } else {
+        subMenuEl.style.top = '0';
+    }
 }
 
+// The submenu needs to be dynamic based on the clicked link. To facilitate that, we will create a helper function called buildSubmenu that does the following:
+function buildSubmenu(subLinks) {
+// Clear the current contents of subMenuEl.    
+    subMenuEl.innerHTML = '';
+// Iterate over the subLinks array, passed as an argument, and for each "link" object:
+    for (let link of subLinks) {
+        // Create an <a> element.
+        const a = document.createElement('a');
+// Add an href attribute to the <a>, with the value set by the href property of the "link" object.        
+        a.setAttribute('href', link.href);
+// Set the element's content to the value of the text property of the "link" object.        
+        a.textContent = link.text;
+// Append the new element to the subMenuEl.
+        subMenuEl.appendChild(a);
+    }
+}
 
 
